@@ -1,0 +1,85 @@
+﻿@model IEnumerable<TaskMgr.Models.Task>
+
+    <div class="container p-3">
+        <div class="row pt-4">
+            <div class="col-6 pb-4">
+                <h2 class="text-primary display-4">Lista zadań</h2>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-controller="Task" asp-action="Create" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> &nbsp; Utwórz nowe zadanie
+                </a>
+            </div>
+            <div class="col-6 pb-3">
+                @using (Html.BeginForm())
+                {
+                    <p>
+                        Szukaj zadania: &nbsp;  @Html.TextBox("SearchString") &nbsp;
+                        <input type="submit" value="Szukaj" class="btn btn-primary" />
+                    </p>
+                }
+            </div>
+        </div>
+
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-bordered table-striped" style="width:100%">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            @Html.ActionLink("Nazwa", "Index",
+                                                new { sortOrder = ViewBag.NameSortParm },
+                                                new { @style = "color: #FFFFFF;" })
+                            <i class="fas fa-sort"></i>
+                        </th>
+                        <th>
+                            @Html.ActionLink("Data", "Index",
+                                                new { sortOrder = ViewBag.DateSortParm },
+                                                new { @style = "color: #FFFFFF;" })
+                            <i class="fas fa-sort"></i>
+                        </th>
+                        <th>
+                            @Html.ActionLink("Godzina", "Index",
+                                                new { sortOrder = ViewBag.TimeSortParm },
+                                                new { @style = "color: #FFFFFF;" })
+                            <i class="fas fa-sort"></i>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var obj in Model)
+                    {
+                        if (obj.Done == false)
+                        {
+                            <tr>
+                                <td width="40%">@obj.Name</td>
+                                <td width="20%">@obj.Date.Date.ToShortDateString()</td>
+                                <td width="10%">@obj.Time.ToShortTimeString()</td>
+                                <td class="text-center">
+                                    <div class="w-75 btn-group" role="group">
+                                        <a asp-controller="Task" asp-route-Id="@obj.Id" asp-action="Done" class="btn btn-success mx-2">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a asp-controller="Task" asp-route-Id="@obj.Id" asp-action="Details" class="btn btn-info mx-2">
+                                            <i class="fas fa-info"></i>
+                                        </a>
+                                        <a asp-controller="Task" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Nie ma żadnych zadań.</p>
+        }
+
+    </div>
+
